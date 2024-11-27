@@ -8,6 +8,47 @@
 	"item": [
 		{
 			"name": "Todos los personajes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseJSON = pm.response.json();\r",
+							"\r",
+							"// Test the response body structure and values\r",
+							"pm.test(\"Response body structure is valid\", function () {\r",
+							"    pm.expect(responseJSON).has.property('info');\r",
+							"    pm.expect(responseJSON).has.property('results');\r",
+							"});\r",
+							"\r",
+							"// checking that each result has the required properties\r",
+							"pm.test(\"Result object structure is valid\", function () {\r",
+							"  responseJSON.results.forEach((result)=>{\r",
+							"    pm.expect(result).has.property('id');\r",
+							"    pm.expect(result).has.property('name');\r",
+							"    pm.expect(result).has.property('status');\r",
+							"    pm.expect(result).has.property('species');\r",
+							"    pm.expect(result).has.property('type');\r",
+							"    pm.expect(result).has.property('gender');\r",
+							"    pm.expect(result).has.property('origin');\r",
+							"    pm.expect(result).has.property('location');\r",
+							"    pm.expect(result).has.property('image');\r",
+							"    pm.expect(result).has.property('episode');\r",
+							"    pm.expect(result).has.property('url');\r",
+							"    pm.expect(result).has.property('created');\r",
+							"  })\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -28,6 +69,31 @@
 		},
 		{
 			"name": "Solo un personaje",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.lessThan(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the character with id 2 is Morty Smith\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.id).to.eql(2);\r",
+							"    pm.expect(jsonData.name).to.eql(\"Morty Smith\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -49,6 +115,37 @@
 		},
 		{
 			"name": "Filtar personajes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify filtered characters are correct\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var filteredCharacters = jsonData.results;\r",
+							"\r",
+							"    // Check if the characters are alive\r",
+							"    filteredCharacters.forEach(function(character) {\r",
+							"        pm.expect(character.status).to.equal(\"Alive\");\r",
+							"    });\r",
+							"\r",
+							"    // Check if the characters are female\r",
+							"    filteredCharacters.forEach(function(character) {\r",
+							"        pm.expect(character.gender).to.equal(\"Female\");\r",
+							"    });\r",
+							"\r",
+							"    // Check if the characters' names contain \"rick\"\r",
+							"    filteredCharacters.forEach(function(character) {\r",
+							"        pm.expect(character.name.toLowerCase()).to.include(\"rick\");\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
